@@ -19,7 +19,7 @@ const AddToCompare = ({ addToCompare }) => {
           <Modal.Title>Add city to compare the weather</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <FormCity onSubmit={addToCompare} />
+          <FormCity closeModal={handleClose} onSubmit={addToCompare} />
         </Modal.Body>
       </Modal>
     </>

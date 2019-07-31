@@ -19,7 +19,7 @@ const ValidationSchema = yup.object().shape({
     .required("This field is required"),
 });
 
-const FormCity = ({ onSubmit }) => (
+const FormCity = ({ onSubmit, closeModal }) => (
   <Formik
     validationSchema={ValidationSchema}
     initialValues={{
@@ -28,6 +28,7 @@ const FormCity = ({ onSubmit }) => (
     }}
     onSubmit={(values) => {
       onSubmit(values);
+      closeModal();
     }}
   >
     {({ handleSubmit, handleChange, values, handleBlur, errors, touched }) => (
@@ -77,4 +78,7 @@ const FormCity = ({ onSubmit }) => (
 );
 export default FormCity;
 
-FormCity.propTypes = { onSubmit: propTypes.func.isRequired };
+FormCity.propTypes = {
+  onSubmit: propTypes.func.isRequired,
+  closeModal: propTypes.func.isRequired,
+};
