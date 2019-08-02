@@ -3,7 +3,7 @@ import moment from "moment";
 
 export const API_KEY = "2d3f3209d60edcc35fc7d1abb01d7cb0";
 
-export const getWeather = (city, country) => {
+export const getWeatherCity = (city, country) => {
   const URL = `https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&units=metric&appid=${API_KEY}`;
   return axios
     .get(URL)
@@ -53,7 +53,6 @@ export const addDataToDays = (listOfDays) => {
       days[starterIndex].push(row);
     }
   });
-
   return days;
 };
 
@@ -80,19 +79,24 @@ export const condensedDayConditions = (apiDataDay) => {
 };
 
 export const getAvgTemp = (apiDataDay) => {
+  const timeOfDayNow = 0;
+  const timeOfDayMidday = 4;
   let avgTemp;
   if (apiDataDay.length < 8) {
-    avgTemp = roundToDigits(apiDataDay[0].main.temp, 0);
+    avgTemp = roundToDigits(apiDataDay[timeOfDayNow].main.temp, 0);
   } else {
-    avgTemp = roundToDigits(apiDataDay[4].main.temp, 0);
+    avgTemp = roundToDigits(apiDataDay[timeOfDayMidday].main.temp, 0);
   }
   return avgTemp;
 };
 
 export const getDataToDisplay = (days) =>
   Object.values(days).map((day) => {
+    const maxNumberOfDataPerDay = 8;
     const iconCode =
-      day.length < 8 ? day[0].weather[0].icon : day[5].weather[0].icon;
+      day.length < maxNumberOfDataPerDay
+        ? day[0].weather[0].icon
+        : day[5].weather[0].icon;
     return {
       iconCode,
       dayOfWeek: moment(day[0].dt * 1000).format("dddd"),
@@ -101,9 +105,19 @@ export const getDataToDisplay = (days) =>
     };
   });
 
-// rawData - list of data from API
 export const dataProvider = (rawData) => {
   let days = addDataToDays(rawData);
   let data = getDataToDisplay(days);
   return data;
+};
+
+export const formattedDataToComponent = async (values) => {
+  try {
+    const data = await getWeatherCity(values.city, values.country);
+    const weather = dataProvider(data.data.list);
+    const city = data.data.city.name;
+    return { err: false, weather, city };
+  } catch (error) {
+    return { err: true, errorMsg: "Couldn't get weather, check spelling" };
+  }
 };

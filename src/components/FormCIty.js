@@ -28,7 +28,9 @@ const FormCity = ({ onSubmit, closeModal }) => (
     }}
     onSubmit={(values) => {
       onSubmit(values);
-      closeModal();
+      if (closeModal) {
+        closeModal();
+      }
     }}
   >
     {({ handleSubmit, handleChange, values, handleBlur, errors, touched }) => (
@@ -80,5 +82,9 @@ export default FormCity;
 
 FormCity.propTypes = {
   onSubmit: propTypes.func.isRequired,
-  closeModal: propTypes.func.isRequired,
+  closeModal: propTypes.func,
+};
+
+FormCity.defaultProps = {
+  closeModal: null,
 };

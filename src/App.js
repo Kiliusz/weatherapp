@@ -22,8 +22,8 @@ class App extends React.Component {
     this.getWeatherFromGeoLoc();
   }
 
-  handleSubmitWeather = async (values) => {
-    const data = await this.getWeather(values);
+  handleSubmitReceiveWeather = async (values) => {
+    const data = await Help.formattedDataToComponent(values);
     if (data.err) {
       this.setState({
         weather: [],
@@ -41,7 +41,7 @@ class App extends React.Component {
   };
 
   handleSubmitCompareWeather = async (values) => {
-    const data = await this.getWeather(values);
+    const data = await Help.formattedDataToComponent(values);
     if (data.err) {
       this.setState({
         weatherCompare: [],
@@ -67,6 +67,7 @@ class App extends React.Component {
         pos.coords.latitude,
         pos.coords.longitude,
       );
+
       const weather = Help.dataProvider(data.data.list);
       this.setState({ weather, city: data.data.city.name });
     };
@@ -75,17 +76,6 @@ class App extends React.Component {
       return error;
     };
     navigator.geolocation.getCurrentPosition(logPosition, logError, options);
-  };
-
-  getWeather = async (values) => {
-    try {
-      const data = await Help.getWeather(values.city, values.country);
-      const weather = Help.dataProvider(data.data.list);
-      const city = data.data.city.name;
-      return { err: false, weather, city };
-    } catch (error) {
-      return { err: true, errorMsg: "Couldn't get weather, check spelling" };
-    }
   };
 
   render() {
@@ -107,7 +97,7 @@ class App extends React.Component {
         />
         <Container>
           <Row className="justify-content-center">
-            <FormCity onSubmit={this.handleSubmitWeather} />
+            <FormCity onSubmit={this.handleSubmitReceiveWeather} />
           </Row>
           {isGeoLoc && city && (
             <Alert variant="secondary" className="text-center">
