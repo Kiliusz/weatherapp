@@ -1,7 +1,7 @@
 import axios from "axios";
 import moment from "moment";
 
-export const API_KEY = "2d3f3209d60edcc35fc7d1abb01d7cb0";
+export const API_KEY = "";
 
 export const getWeatherCity = (city, country) => {
   const URL = `https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&units=metric&appid=${API_KEY}`;
